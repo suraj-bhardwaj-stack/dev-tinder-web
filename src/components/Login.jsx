@@ -1,37 +1,43 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { addUser } from './utils/userSlice';
-import { Backend_Base_Url } from './utils/constent';
+import { addUser } from '../utils/userSlice';
+import { Backend_Base_Url } from '../utils/constent';
 import { useNavigate } from 'react-router-dom';
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("")
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("")
+  const [error , setError] = useState("")
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-    const loginHandler = async () =>{
-        const res = await axios.post(Backend_Base_Url + "/login", {
-            emailId: email, // ← rename this
-            password,
-        },{withCredentials: true})
-        console.log(res.data.user)
-        dispatch(addUser(res.data.user))
-        navigate('/')
+  const loginHandler = async () => {
+    try {
+      const res = await axios.post(Backend_Base_Url + "/login", {
+        emailId: email, // ← rename this
+        password,
+      }, { withCredentials: true })
+      dispatch(addUser(res.data.user))
+      navigate('/')
+    }catch(err){
+      setError(err?.response?.data)
+      console.log(err.response.data)
+    }
     }
 
   return (
-     <div className="card card-border bg-neutral w-96 absolute left-1/2 -translate-x-1/2 top-30">
+    <div className="card card-border bg-neutral w-96 absolute left-1/2 -translate-x-1/2 top-20">
       <div className="card-body">
         <h2 className="card-title text-white">Login</h2>
         <fieldset className="fieldset">
-            <legend className="fieldset-legend text-white">Email ID</legend>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" className="input" placeholder="Enter Email" />
+          <legend className="fieldset-legend text-white">Email ID</legend>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" className="input" placeholder="Enter Email" />
         </fieldset>
         <fieldset className="fieldset">
-            <legend className="fieldset-legend text-white">Password</legend>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="text" className="input" placeholder="Enter Password" />
+          <legend className="fieldset-legend text-white">Password</legend>
+          <input value={password} onChange={(e) => setPassword(e.target.value)} type="text" className="input" placeholder="Enter Password" />
         </fieldset>
+        <p className='err text-red-500 text-xs'>{error}</p>
 
         <div className="card-actions justify-center">
           <button className="btn btn-primary" onClick={loginHandler}>Login</button>
