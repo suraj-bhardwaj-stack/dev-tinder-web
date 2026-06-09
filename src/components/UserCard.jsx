@@ -4,7 +4,7 @@ function UserCard({user}) {
     console.log(user)
     const {firstName , lastName , photoUrl} = user;
     return (
-        <div className="card bg-neutral w-86 shadow-sm absolute left-1/2 -translate-x-1/2 top-20 pt-4">
+        <div className="card bg-neutral w-86 shadow-sm pt-4">
             <figure>
                 <img
                     src={photoUrl || defaultUserImg}
